@@ -334,7 +334,10 @@ class _ScrollablePositionedListState extends State<ScrollablePositionedList>
     if (widget.itemCount > 0 && primary.target > widget.itemCount - 1) {
       primary.target = widget.itemCount - 1;
     }
-    widget.itemScrollController?._attach(this);
+    if (widget.itemScrollController?._scrollableListState != this) {
+      widget.itemScrollController?._detach();
+      widget.itemScrollController?._attach(this);
+    }
     widget.scrollOffsetController?._attach(this);
     primary.itemPositionsNotifier.itemPositions.addListener(_updatePositions);
     secondary.itemPositionsNotifier.itemPositions.addListener(_updatePositions);
@@ -352,7 +355,11 @@ class _ScrollablePositionedListState extends State<ScrollablePositionedList>
   @override
   void activate() {
     super.activate();
-    widget.itemScrollController?._attach(this);
+
+    if (widget.itemScrollController?._scrollableListState != this) {
+      widget.itemScrollController?._detach();
+      widget.itemScrollController?._attach(this);
+    }
     widget.scrollOffsetController?._attach(this);
   }
 
